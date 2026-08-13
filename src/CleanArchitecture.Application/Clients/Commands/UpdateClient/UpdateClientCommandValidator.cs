@@ -1,11 +1,11 @@
 using CleanArchitecture.Application.Common.Interfaces;
 using FluentValidation;
 
-namespace CleanArchitecture.Application.Clients.Commands.CreateClient;
+namespace CleanArchitecture.Application.Clients.Commands.UpdateClient;
 
-public class CreateClientCommandValidator : AbstractValidator<CreateClientCommand>
+public class UpdateClientCommandValidator : AbstractValidator<UpdateClientCommand>
 {
-    public CreateClientCommandValidator(IClientRepository clientRepository)
+    public UpdateClientCommandValidator(IClientRepository clientRepository)
     {
         RuleFor(command => command.Name)
             .NotEmpty().WithMessage("Name is required.")
@@ -14,8 +14,8 @@ public class CreateClientCommandValidator : AbstractValidator<CreateClientComman
         RuleFor(command => command.Document)
             .NotEmpty().WithMessage("Document is required.")
             .MaximumLength(20)
-            .MustAsync(async (document, cancellationToken) =>
-                !await clientRepository.DocumentExistsAsync(document, null, cancellationToken))
+            .MustAsync(async (command, document, cancellationToken) =>
+                !await clientRepository.DocumentExistsAsync(document, command.Id, cancellationToken))
             .WithMessage("Document is already registered.");
 
         RuleFor(command => command.BirthDate)

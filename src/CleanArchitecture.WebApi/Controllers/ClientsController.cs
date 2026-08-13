@@ -1,4 +1,5 @@
 using CleanArchitecture.Application.Clients.Commands.CreateClient;
+using CleanArchitecture.Application.Clients.Commands.UpdateClient;
 using CleanArchitecture.Application.Clients.Models;
 using CleanArchitecture.Application.Clients.Queries.GetClientById;
 using CleanArchitecture.Application.Clients.Queries.GetClients;
@@ -35,5 +36,21 @@ public class ClientsController(ISender sender) : ControllerBase
         var clientId = await sender.Send(command, cancellationToken);
 
         return CreatedAtAction(nameof(Create), new { id = clientId }, clientId);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(
+        Guid id,
+        UpdateClientCommand command,
+        CancellationToken cancellationToken)
+    {
+        if (id != command.Id)
+        {
+            return BadRequest();
+        }
+
+        var updated = await sender.Send(command, cancellationToken);
+
+        return updated ? NoContent() : NotFound();
     }
 }

@@ -14,4 +14,11 @@ public class Client
         Document = document;
         BirthDate = birthDate;
     }
+
+    public void Update(string name, string document, DateOnly birthDate)
+    {
+        Name = name;
+        Document = document;
+        BirthDate = birthDate;
+    }
 }

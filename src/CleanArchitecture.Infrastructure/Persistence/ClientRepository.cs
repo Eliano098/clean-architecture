@@ -13,9 +13,24 @@ public class ClientRepository(ApplicationDbContext context) : IClientRepository
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<bool> DocumentExistsAsync(string document, CancellationToken cancellationToken)
+    public Task<bool> DocumentExistsAsync(
+        string document,
+        Guid? excludingId,
+        CancellationToken cancellationToken)
     {
-        return context.Clients.AnyAsync(client => client.Document == document, cancellationToken);
+        return context.Clients.AnyAsync(
+            client => client.Document == document && client.Id != excludingId,
+            cancellationToken);
+    }
+
+    public Task<Client?> FindAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return context.Clients.SingleOrDefaultAsync(client => client.Id == id, cancellationToken);
+    }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        return context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<ClientDto>> GetAllAsync(CancellationToken cancellationToken)
