@@ -18,6 +18,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+app.UseMiddleware<CleanArchitecture.WebApi.Middleware.ExceptionHandlingMiddleware>();
 
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }))
     .WithName("HealthCheck");
