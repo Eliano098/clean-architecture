@@ -8,6 +8,7 @@ public interface IClientRepository
     Task AddAsync(Client client, CancellationToken cancellationToken);
     Task<bool> DocumentExistsAsync(string document, Guid? excludingId, CancellationToken cancellationToken);
     Task<Client?> FindAsync(Guid id, CancellationToken cancellationToken);
+    void Remove(Client client);
     Task SaveChangesAsync(CancellationToken cancellationToken);
     Task<IReadOnlyList<ClientDto>> GetAllAsync(CancellationToken cancellationToken);
     Task<ClientDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken);

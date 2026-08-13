@@ -28,6 +28,11 @@ public class ClientRepository(ApplicationDbContext context) : IClientRepository
         return context.Clients.SingleOrDefaultAsync(client => client.Id == id, cancellationToken);
     }
 
+    public void Remove(Client client)
+    {
+        context.Clients.Remove(client);
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         return context.SaveChangesAsync(cancellationToken);

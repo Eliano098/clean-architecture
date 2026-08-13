@@ -1,4 +1,5 @@
 using CleanArchitecture.Application.Clients.Commands.CreateClient;
+using CleanArchitecture.Application.Clients.Commands.DeleteClient;
 using CleanArchitecture.Application.Clients.Commands.UpdateClient;
 using CleanArchitecture.Application.Clients.Models;
 using CleanArchitecture.Application.Clients.Queries.GetClientById;
@@ -52,5 +53,13 @@ public class ClientsController(ISender sender) : ControllerBase
         var updated = await sender.Send(command, cancellationToken);
 
         return updated ? NoContent() : NotFound();
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    {
+        var deleted = await sender.Send(new DeleteClientCommand(id), cancellationToken);
+
+        return deleted ? NoContent() : NotFound();
     }
 }
