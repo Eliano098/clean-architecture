@@ -1,4 +1,5 @@
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Clients.Models;
 using CleanArchitecture.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,5 +16,18 @@ public class ClientRepository(ApplicationDbContext context) : IClientRepository
     public Task<bool> DocumentExistsAsync(string document, CancellationToken cancellationToken)
     {
         return context.Clients.AnyAsync(client => client.Document == document, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<ClientDto>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await context.Clients
+            .AsNoTracking()
+            .OrderBy(client => client.Name)
+            .Select(client => new ClientDto(
+                client.Id,
+                client.Name,
+                client.Document,
+                client.BirthDate))
+            .ToListAsync(cancellationToken);
     }
 }
