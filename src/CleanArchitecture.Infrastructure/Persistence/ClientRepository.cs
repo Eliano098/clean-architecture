@@ -30,4 +30,17 @@ public class ClientRepository(ApplicationDbContext context) : IClientRepository
                 client.BirthDate))
             .ToListAsync(cancellationToken);
     }
+
+    public Task<ClientDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return context.Clients
+            .AsNoTracking()
+            .Where(client => client.Id == id)
+            .Select(client => new ClientDto(
+                client.Id,
+                client.Name,
+                client.Document,
+                client.BirthDate))
+            .SingleOrDefaultAsync(cancellationToken);
+    }
 }

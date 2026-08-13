@@ -1,5 +1,6 @@
 using CleanArchitecture.Application.Clients.Commands.CreateClient;
 using CleanArchitecture.Application.Clients.Models;
+using CleanArchitecture.Application.Clients.Queries.GetClientById;
 using CleanArchitecture.Application.Clients.Queries.GetClients;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,14 @@ public class ClientsController(ISender sender) : ControllerBase
         var clients = await sender.Send(new GetClientsQuery(), cancellationToken);
 
         return Ok(clients);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<ClientDto>> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        var client = await sender.Send(new GetClientByIdQuery(id), cancellationToken);
+
+        return client is null ? NotFound() : Ok(client);
     }
 
     [HttpPost]
